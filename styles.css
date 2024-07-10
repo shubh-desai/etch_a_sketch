@@ -27,3 +27,7 @@ body {
     /* background-color: aqua; */
     flex: 1;
 }
+
+#display-size {
+    padding: 16px;
+}
