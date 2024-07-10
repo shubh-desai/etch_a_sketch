@@ -13,10 +13,8 @@ body {
 }
 
 #container {
-    height: 480px;
-    width: 480px;
-    text-align: center;
     background-color: grey;
+    border: 2px black solid;
 }
 
 .miniContainers {
@@ -26,7 +24,6 @@ body {
 
 .divs {
     border: 2px black solid;
-    background-color: aqua;
-    height: 30px;
+    /* background-color: aqua; */
     flex: 1;
 }
