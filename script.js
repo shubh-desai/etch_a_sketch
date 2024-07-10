@@ -1,4 +1,3 @@
-const container = document.querySelector("#container");
 const DEFAULT_GRID_SIZE = 16;
 const WIDTH = 480;
 const HEIGHT = 480;
@@ -8,8 +7,61 @@ const containerWidth = (WIDTH) + "px";
 let currentColorChangeFunction = changeColorToBlack;
 let gridSize = DEFAULT_GRID_SIZE;
 
+const container = document.querySelector("#container");
 container.style.height = containerHeight;
 container.style.width = containerWidth;
+
+const buttonsDiv = document.createElement("div");
+buttonsDiv.setAttribute("id", "buttonsDiv");
+
+const buttonRGB = document.createElement("button");
+buttonRGB.textContent = "Rainbow";
+
+buttonRGB.addEventListener("click", function() {  
+    changeColorHandler(gridSize, changeColorToRGB);
+});
+
+buttonsDiv.appendChild (buttonRGB);
+
+const buttonBlack = document.createElement("button");
+buttonBlack.textContent = "Black";
+
+buttonBlack.addEventListener("click", function() {  
+    changeColorHandler(gridSize, changeColorToBlack);
+});
+
+buttonsDiv.appendChild (buttonBlack);
+
+const buttonErase = document.createElement("button");
+buttonErase.textContent = "Erase";
+
+buttonErase.addEventListener("click", function() {  
+    changeColorHandler(gridSize, changeColorToOriginal);
+});
+
+buttonsDiv.appendChild (buttonErase);
+
+const buttonClear = document.createElement("button");
+buttonClear.textContent = "Clear";
+
+buttonClear.addEventListener("click", function() {
+    removeGrid(gridSize);
+    createGrid(gridSize, currentColorChangeFunction);
+});
+
+buttonsDiv.appendChild (buttonClear);
+
+const buttonDarkening = document.createElement("button");
+buttonDarkening.textContent = "Darkening";
+
+buttonDarkening.addEventListener("click", function() {
+    changeColorHandler(gridSize, changeOpacity);
+});
+
+buttonsDiv.appendChild (buttonDarkening);
+
+const body = document.querySelector("body");
+body.insertBefore(buttonsDiv, container);
 
 let miniContainers = [];
 let divs = [];
@@ -117,8 +169,6 @@ function removeGrid (pGridSize) {
     miniContainers = [];
 }
 
-const body = document.querySelector("body");
-
 const displaySize = document.createElement("div");
 displaySize.setAttribute("id", "display-size");
 displaySize.textContent = `Grid Size: ${gridSize} X ${gridSize}`;
@@ -129,6 +179,7 @@ slider.setAttribute("type", "range");
 slider.setAttribute("min", "1");
 slider.setAttribute("max", "64");
 slider.setAttribute("value", "16");
+slider.classList.add("slider");
 body.appendChild(slider);
 
 slider.oninput = function() {
@@ -150,49 +201,3 @@ function changeColorHandler (pGridSize, pColorFunction) {
 
     attachColorChangeListener (pGridSize, pColorFunction);
 }
-
-const buttonRGB = document.createElement("button");
-buttonRGB.textContent = "Rainbow";
-
-buttonRGB.addEventListener("click", function() {  
-    changeColorHandler(gridSize, changeColorToRGB);
-});
-
-body.appendChild (buttonRGB);
-
-const buttonBlack = document.createElement("button");
-buttonBlack.textContent = "Black";
-
-buttonBlack.addEventListener("click", function() {  
-    changeColorHandler(gridSize, changeColorToBlack);
-});
-
-body.appendChild (buttonBlack);
-
-const buttonErase = document.createElement("button");
-buttonErase.textContent = "Erase";
-
-buttonErase.addEventListener("click", function() {  
-    changeColorHandler(gridSize, changeColorToOriginal);
-});
-
-body.appendChild (buttonErase);
-
-const buttonClear = document.createElement("button");
-buttonClear.textContent = "Clear";
-
-buttonClear.addEventListener("click", function() {
-    removeGrid(gridSize);
-    createGrid(gridSize, currentColorChangeFunction);
-});
-
-body.appendChild (buttonClear);
-
-const buttonDarkening = document.createElement("button");
-buttonDarkening.textContent = "Darkening";
-
-buttonDarkening.addEventListener("click", function() {
-    changeColorHandler(gridSize, changeOpacity);
-});
-
-body.appendChild (buttonDarkening);

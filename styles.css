@@ -6,14 +6,41 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: grey;    
+}
+
+h1 {
+    margin: 12px;
+    color: #302167;
+}
+
+button {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 4px;
+    border-color: red;
+
+    font-weight: bold;
+    color: red;
+    background-color: black;
 }
 
 #heading {
     text-align: center;
 }
 
+#buttonsDiv {
+    display: flex;
+    padding-bottom: 24px;
+    justify-content: space-between;
+    gap: 20px;
+}
+
 #container {
     border: 2px black solid;
+    background-color: white;
 }
 
 .miniContainers {
@@ -27,5 +54,38 @@ body {
 }
 
 #display-size {
-    padding: 16px;
+    padding: 8px 64px;
+    margin: 16px;
+    font-weight: bold;
+    background-color: greenyellow;
 }
+
+.slider {
+    -webkit-appearance: none;
+    width: 480px;
+    height: 15px;
+    border-radius: 5px;  
+    background: red;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; 
+    background: white;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #04AA6D;
+    cursor: pointer;
+  }
