@@ -1,70 +1,68 @@
-const DEFAULT_GRID_SIZE = 16;
+const DEFAULT_GRID_SIZE = 8;
 const WIDTH = 480;
 const HEIGHT = 480;
+let gridSize = DEFAULT_GRID_SIZE;
+
+let currentColorChangeFunction = changeColorToBlack;
+
+// main-container (grid) sizing
+
+const container = document.querySelector("#container");
+
 const containerHeight = (HEIGHT) + "px";
 const containerWidth = (WIDTH) + "px";
 
-let currentColorChangeFunction = changeColorToBlack;
-let gridSize = DEFAULT_GRID_SIZE;
-
-const container = document.querySelector("#container");
 container.style.height = containerHeight;
 container.style.width = containerWidth;
+
+// buttons 
 
 const buttonsDiv = document.createElement("div");
 buttonsDiv.setAttribute("id", "buttonsDiv");
 
-const buttonRGB = document.createElement("button");
-buttonRGB.textContent = "Rainbow";
-
-buttonRGB.addEventListener("click", function() {  
-    changeColorHandler(gridSize, changeColorToRGB);
-});
-
-buttonsDiv.appendChild (buttonRGB);
-
 const buttonBlack = document.createElement("button");
+const buttonRGB = document.createElement("button");
+const buttonDarkening = document.createElement("button");
+const buttonErase = document.createElement("button");
+const buttonClear = document.createElement("button");
+
 buttonBlack.textContent = "Black";
+buttonRGB.textContent = "Rainbow";
+buttonDarkening.textContent = "Darkening";
+buttonErase.textContent = "Erase";
+buttonClear.textContent = "Clear";
 
 buttonBlack.addEventListener("click", function() {  
     changeColorHandler(gridSize, changeColorToBlack);
 });
 
-buttonsDiv.appendChild (buttonBlack);
+buttonRGB.addEventListener("click", function() {  
+    changeColorHandler(gridSize, changeColorToRGB);
+});
 
-const buttonErase = document.createElement("button");
-buttonErase.textContent = "Erase";
+buttonDarkening.addEventListener("click", function() {
+    changeColorHandler(gridSize, changeOpacity);
+});
 
 buttonErase.addEventListener("click", function() {  
     changeColorHandler(gridSize, changeColorToOriginal);
 });
-
-buttonsDiv.appendChild (buttonErase);
-
-const buttonClear = document.createElement("button");
-buttonClear.textContent = "Clear";
 
 buttonClear.addEventListener("click", function() {
     removeGrid(gridSize);
     createGrid(gridSize, currentColorChangeFunction);
 });
 
-buttonsDiv.appendChild (buttonClear);
-
-const buttonDarkening = document.createElement("button");
-buttonDarkening.textContent = "Darkening";
-
-buttonDarkening.addEventListener("click", function() {
-    changeColorHandler(gridSize, changeOpacity);
-});
-
+buttonsDiv.appendChild (buttonBlack);
+buttonsDiv.appendChild (buttonRGB);
 buttonsDiv.appendChild (buttonDarkening);
+buttonsDiv.appendChild (buttonErase);
+buttonsDiv.appendChild (buttonClear);
 
 const body = document.querySelector("body");
 body.insertBefore(buttonsDiv, container);
 
-let miniContainers = [];
-let divs = [];
+// functions for various color options
 
 function changeColorToOriginal (pEvent) {
 
@@ -73,21 +71,6 @@ function changeColorToOriginal (pEvent) {
     target.style.backgroundColor = "white";
 
     target.style.opacity = 1;
-}
-
-function changeOpacity (pEvent) {
-
-    let target = pEvent.target;
-
-    if (target.style.opacity === "") {
-        target.style.opacity = 0;
-    } else if (Number(target.style.opacity) < 1) {
-        target.style.opacity = Number(target.style.opacity) + 0.1;
-    } else if (target.style.backgroundColor != "black") {
-        target.style.opacity = 0;
-    }
-
-    target.style.backgroundColor = "black";
 }
 
 function changeColorToBlack (pEvent) {
@@ -112,27 +95,22 @@ function changeColorToRGB (pEvent) {
     target.style.opacity = 1;
 }
 
-function createGrid (pGridSize = DEFAULT_GRID_SIZE, pColorChange = changeColorToBlack) {
+function changeOpacity (pEvent) {
 
-    for (let index = 0; index < pGridSize; index += 1) {
-        
-        miniContainers[index] = document.createElement("div");
-        miniContainers[index].classList.add("miniContainers");
+    let target = pEvent.target;
 
-        container.appendChild(miniContainers[index]);
+    if (target.style.opacity === "") {
+        target.style.opacity = 0;
+    } else if (Number(target.style.opacity) < 1) {
+        target.style.opacity = Number(target.style.opacity) + 0.1;
+    } else if (target.style.backgroundColor != "black") {
+        target.style.opacity = 0;
     }
 
-    for (let index = 0; index < pGridSize * pGridSize; index += 1) {
-        
-        divs[index] = document.createElement("div");
-        divs[index].classList.add("divs");
-        miniContainers[Math.floor(index / pGridSize)].appendChild(divs[index]);
-        divs[index].style.height = ((HEIGHT - 2) / pGridSize) + "px";
-        divs[index].setAttribute("id", index);
-    }
-
-    attachColorChangeListener (pGridSize, pColorChange);
+    target.style.backgroundColor = "black";
 }
+
+// event handler manipulation
 
 function attachColorChangeListener (pGridSize, pColorChange) {
 
@@ -152,6 +130,40 @@ function removeColorChangeListener (pGridSize) {
     }
 }
 
+function changeColorHandler (pGridSize, pColorFunction) {
+
+    removeColorChangeListener (pGridSize);
+
+    attachColorChangeListener (pGridSize, pColorFunction);
+}
+
+// grid creation and deletion
+
+let miniContainers = [];
+let divs = [];
+
+function createGrid (pGridSize = DEFAULT_GRID_SIZE, pColorChange = changeColorToBlack) {
+
+    for (let index = 0; index < pGridSize; index += 1) {
+        
+        miniContainers[index] = document.createElement("div");        
+        miniContainers[index].classList.add("miniContainers");
+        container.appendChild(miniContainers[index]);
+    }
+
+    for (let index = 0; index < pGridSize * pGridSize; index += 1) {
+        
+        divs[index] = document.createElement("div");
+        divs[index].classList.add("divs");
+        miniContainers[Math.floor(index / pGridSize)].appendChild(divs[index]);
+        
+        divs[index].style.height = ((HEIGHT - 2) / pGridSize) + "px";
+        divs[index].setAttribute("id", index);
+    }
+
+    attachColorChangeListener (pGridSize, pColorChange);
+}
+
 function removeGrid (pGridSize) {
 
     for (let index = 0; index < pGridSize * pGridSize; index += 1) {
@@ -168,6 +180,8 @@ function removeGrid (pGridSize) {
 
     miniContainers = [];
 }
+
+// dimension selection slider and associated text
 
 const displaySize = document.createElement("div");
 displaySize.setAttribute("id", "display-size");
@@ -193,11 +207,6 @@ slider.oninput = function() {
     createGrid (gridSize, currentColorChangeFunction);
 }
 
+// initial function call
+
 createGrid ();
-
-function changeColorHandler (pGridSize, pColorFunction) {
-
-    removeColorChangeListener (pGridSize);
-
-    attachColorChangeListener (pGridSize, pColorFunction);
-}
