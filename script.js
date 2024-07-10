@@ -19,6 +19,23 @@ function changeColorToOriginal (pEvent) {
     let target = pEvent.target;
 
     target.style.backgroundColor = "white";
+
+    target.style.opacity = 1;
+}
+
+function changeOpacity (pEvent) {
+
+    let target = pEvent.target;
+
+    if (target.style.opacity === "") {
+        target.style.opacity = 0;
+    } else if (Number(target.style.opacity) < 1) {
+        target.style.opacity = Number(target.style.opacity) + 0.1;
+    } else if (target.style.backgroundColor != "black") {
+        target.style.opacity = 0;
+    }
+
+    target.style.backgroundColor = "black";
 }
 
 function changeColorToBlack (pEvent) {
@@ -26,6 +43,8 @@ function changeColorToBlack (pEvent) {
     let target = pEvent.target;
 
     target.style.backgroundColor = "black";
+
+    target.style.opacity = 1;
 }
 
 function changeColorToRGB (pEvent) {
@@ -37,6 +56,8 @@ function changeColorToRGB (pEvent) {
     let b = Math.floor(Math.random() * 255);
 
     target.style.backgroundColor = "rgb(" + r + "," + g + "," + b + ")";
+
+    target.style.opacity = 1;
 }
 
 function createGrid (pGridSize = DEFAULT_GRID_SIZE, pColorChange = changeColorToBlack) {
@@ -55,7 +76,7 @@ function createGrid (pGridSize = DEFAULT_GRID_SIZE, pColorChange = changeColorTo
         divs[index].classList.add("divs");
         miniContainers[Math.floor(index / pGridSize)].appendChild(divs[index]);
         divs[index].style.height = ((HEIGHT - 2) / pGridSize) + "px";
-        divs[index].setAttribute("id", index * pGridSize + index);
+        divs[index].setAttribute("id", index);
     }
 
     attachColorChangeListener (pGridSize, pColorChange);
@@ -166,3 +187,12 @@ buttonClear.addEventListener("click", function() {
 });
 
 body.appendChild (buttonClear);
+
+const buttonDarkening = document.createElement("button");
+buttonDarkening.textContent = "Darkening";
+
+buttonDarkening.addEventListener("click", function() {
+    changeColorHandler(gridSize, changeOpacity);
+});
+
+body.appendChild (buttonDarkening);
