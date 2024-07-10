@@ -1,7 +1,32 @@
+* {
+    box-sizing:border-box;
+}
+
 body {
-    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #heading {
     text-align: center;
+}
+
+#container {
+    height: 480px;
+    width: 480px;
+    text-align: center;
+    background-color: grey;
+}
+
+.miniContainers {
+    display: flex;
+    flex: 1;
+}
+
+.divs {
+    border: 2px black solid;
+    background-color: aqua;
+    height: 30px;
+    flex: 1;
 }
