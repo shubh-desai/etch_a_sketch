@@ -5,6 +5,7 @@ const HEIGHT = 480;
 const containerHeight = (HEIGHT) + "px";
 const containerWidth = (WIDTH) + "px";
 
+let currentColorChangeFunction = changeColorToBlack;
 let gridSize = DEFAULT_GRID_SIZE;
 
 container.style.height = containerHeight;
@@ -13,7 +14,32 @@ container.style.width = containerWidth;
 let miniContainers = [];
 let divs = [];
 
-function createGrid (pGridSize = DEFAULT_GRID_SIZE) {
+function changeColorToOriginal (pEvent) {
+
+    let target = pEvent.target;
+
+    target.style.backgroundColor = "white";
+}
+
+function changeColorToBlack (pEvent) {
+
+    let target = pEvent.target;
+
+    target.style.backgroundColor = "black";
+}
+
+function changeColorToRGB (pEvent) {
+
+    let target = pEvent.target;
+
+    let r = Math.floor(Math.random() * 255);
+    let g = Math.floor(Math.random() * 255);
+    let b = Math.floor(Math.random() * 255);
+
+    target.style.backgroundColor = "rgb(" + r + "," + g + "," + b + ")";
+}
+
+function createGrid (pGridSize = DEFAULT_GRID_SIZE, pColorChange = changeColorToBlack) {
 
     for (let index = 0; index < pGridSize; index += 1) {
         
@@ -26,9 +52,30 @@ function createGrid (pGridSize = DEFAULT_GRID_SIZE) {
     for (let index = 0; index < pGridSize * pGridSize; index += 1) {
         
         divs[index] = document.createElement("div");
-        divs[index].classList.add("divs");    
+        divs[index].classList.add("divs");
         miniContainers[Math.floor(index / pGridSize)].appendChild(divs[index]);
-        divs[index].style.height = (HEIGHT / pGridSize) + "px";
+        divs[index].style.height = ((HEIGHT - 2) / pGridSize) + "px";
+        divs[index].setAttribute("id", index * pGridSize + index);
+    }
+
+    attachColorChangeListener (pGridSize, pColorChange);
+}
+
+function attachColorChangeListener (pGridSize, pColorChange) {
+
+    currentColorChangeFunction = pColorChange;
+
+    for (let index = 0; index < pGridSize * pGridSize; index += 1) {
+        
+        divs[index].addEventListener("mouseenter", currentColorChangeFunction);
+    }
+}
+
+function removeColorChangeListener (pGridSize) {
+
+    for (let index = 0; index < pGridSize * pGridSize; index += 1) {
+        
+        divs[index].removeEventListener("mouseenter", currentColorChangeFunction);
     }
 }
 
@@ -71,7 +118,51 @@ slider.oninput = function() {
 
     gridSize = this.value;
 
-    createGrid (gridSize);
+    createGrid (gridSize, currentColorChangeFunction);
 }
 
 createGrid ();
+
+function changeColorHandler (pGridSize, pColorFunction) {
+
+    removeColorChangeListener (pGridSize);
+
+    attachColorChangeListener (pGridSize, pColorFunction);
+}
+
+const buttonRGB = document.createElement("button");
+buttonRGB.textContent = "Rainbow";
+
+buttonRGB.addEventListener("click", function() {  
+    changeColorHandler(gridSize, changeColorToRGB);
+});
+
+body.appendChild (buttonRGB);
+
+const buttonBlack = document.createElement("button");
+buttonBlack.textContent = "Black";
+
+buttonBlack.addEventListener("click", function() {  
+    changeColorHandler(gridSize, changeColorToBlack);
+});
+
+body.appendChild (buttonBlack);
+
+const buttonErase = document.createElement("button");
+buttonErase.textContent = "Erase";
+
+buttonErase.addEventListener("click", function() {  
+    changeColorHandler(gridSize, changeColorToOriginal);
+});
+
+body.appendChild (buttonErase);
+
+const buttonClear = document.createElement("button");
+buttonClear.textContent = "Clear";
+
+buttonClear.addEventListener("click", function() {
+    removeGrid(gridSize);
+    createGrid(gridSize, currentColorChangeFunction);
+});
+
+body.appendChild (buttonClear);

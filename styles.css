@@ -13,7 +13,6 @@ body {
 }
 
 #container {
-    background-color: grey;
     border: 2px black solid;
 }
 
@@ -23,8 +22,7 @@ body {
 }
 
 .divs {
-    border: 2px black solid;
-    /* background-color: aqua; */
+    border: 1px black solid;
     flex: 1;
 }
 
